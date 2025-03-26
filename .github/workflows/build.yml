@@ -3,8 +3,6 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "**" ]  # Run on every branch
-  pull_request:
-    branches: [ "**" ]  # Run on every branch
 
 jobs:
   build:
