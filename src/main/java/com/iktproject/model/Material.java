@@ -10,17 +10,20 @@ public class Material {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; 
+    private Long id;
+
+    private String title;
 
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="subject_id", nullable = false)
+    @JoinColumn(name="subject_id")
     private Subject subject;
 
     public Material() {}
 
-    public Material(String content, Subject subject) {
+    public Material(String title, String content, Subject subject) {
+        this.title = title;
         this.content = content;
         this.subject = subject;
     }

@@ -20,24 +20,21 @@ public class User {
 
     private String surname;
 
-    private int grade;
+    private Double grade_average;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Subject> subjects;
 
-    public User(String username, String name, String surname, int grade, String password, Type type, List<Subject> subjects) {
+    public User(String username, String name, String surname, Double grade_average, String password, Type type) {
         this.username = username;
         this.name = name;
         this.surname = surname;
-        this.grade = grade;
+        this.grade_average = grade_average;
         this.password = password;
         this.type = type;
-        this.subjects = subjects;
     }
 
     public User() {
