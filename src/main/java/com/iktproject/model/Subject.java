@@ -19,11 +19,4 @@ public class Subject {
     @OneToMany(mappedBy =  "subject", cascade = CascadeType.ALL)
     private List<Material> materials;
 
-    public Subject() {}
-
-    public Subject(String subjectName, String subjectDescription, List<Material> materials) {
-        this.subjectName = subjectName;
-        this.subjectDescription = subjectDescription;
-        this.materials = materials;
-    }
 }

@@ -20,13 +20,5 @@ public class Material {
     @JoinColumn(name="subject_id")
     private Subject subject;
 
-    public Material() {}
-
-    public Material(String title, String content, Subject subject) {
-        this.title = title;
-        this.content = content;
-        this.subject = subject;
-    }
-
 }
 
