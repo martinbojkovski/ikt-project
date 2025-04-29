@@ -19,4 +19,13 @@ public class Subject {
     @OneToMany(mappedBy =  "subject", cascade = CascadeType.ALL)
     private List<Material> materials;
 
+    public void addMaterial(Material material) {
+        materials.add(material);
+        material.setSubject(this);
+    }
+
+    public void removeMaterial(Material material) {
+        materials.remove(material);
+        material.setSubject(null);
+    }
 }
