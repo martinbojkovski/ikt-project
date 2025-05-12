@@ -24,4 +24,16 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Type type;
+
+    public User(String username, String name, String surname, Double grade_average, String password, Type type) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.grade_average = grade_average;
+        this.password = password;
+        this.type = type;
+    }
+
+    public User() {
+    }
 }

@@ -28,4 +28,12 @@ public class Subject {
         materials.remove(material);
         material.setSubject(null);
     }
+
+    public Subject() {}
+
+    public Subject(String subjectName, String subjectDescription, List<Material> materials) {
+        this.subjectName = subjectName;
+        this.subjectDescription = subjectDescription;
+        this.materials = materials;
+    }
 }
