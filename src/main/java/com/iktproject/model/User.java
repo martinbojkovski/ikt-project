@@ -3,8 +3,6 @@ package com.iktproject.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Entity
 @Table(name = "users")
@@ -26,7 +24,6 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Type type;
-
 
     public User(String username, String name, String surname, Double grade_average, String password, Type type) {
         this.username = username;
