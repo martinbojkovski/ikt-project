@@ -49,7 +49,7 @@ public class SubjectController {
 
     @GetMapping("/subjects/{id}/generate-material")
     public String showGenerateMaterialForm(@PathVariable Long id, Model model) {
-        Subject subject = subjectService.findById(id); // get subject details
+        Subject subject = subjectService.findById(id);
         model.addAttribute("subject", subject);
         return "generate-material";
     }
@@ -57,14 +57,14 @@ public class SubjectController {
     @PostMapping("/subjects/{id}/generate-material")
     public String generateMaterial(@PathVariable Long id, @RequestParam("prompt") String prompt, Model model)
             throws IOException {
-        Subject subject = subjectService.findById(id); // get subject details
+        Subject subject = subjectService.findById(id);
 
         try {
             testService.generateMaterial(id, prompt);
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred while generating material: " + e.getMessage());
             model.addAttribute("subject", subject);
-            return "generate-material"; // return to the same page with error message
+            return "generate-material";
         }
 
         return "redirect:/subjects/" + id + "/materials";

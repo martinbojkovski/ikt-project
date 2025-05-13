@@ -69,11 +69,10 @@ public class TestService {
         int total = answers.size();
         for (int i = 0; i < total; i++) {
             String userAnswer = answers.get("answer" + i);
-            // Compare with correct answer from the stored/generated test
             if (userAnswer.equalsIgnoreCase("CORRECT_ANSWER")) correct++;
         }
         double rawScore = (double) correct / total;
-        return Math.round((rawScore * 4 + 1) * 10.0) / 10.0; // Maps 0-100% to 1-5 scale
+        return Math.round((rawScore * 4 + 1) * 10.0) / 10.0;
     }
 
     public User getLoggedInUser(String username) {
@@ -91,7 +90,6 @@ public class TestService {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
 
-        // Create the request body as a Map and let WebClient serialize it
         Map<String, Object> body = new HashMap<>();
         body.put("model", "gpt-3.5-turbo");
 
@@ -109,30 +107,26 @@ public class TestService {
         body.put("messages", messages);
         body.put("temperature", 0.7);
 
-        // Use WebClient to send the request
+
         return webClient.post()
-                .bodyValue(body)  // WebClient will automatically serialize the map to JSON
+                .bodyValue(body)
                 .retrieve()
                 .onStatus(status -> {
-                    // Check for client errors (4xx) and server errors (5xx)
                     if (status.is4xxClientError()) {
-                        // Handle client error
                         return true;
                     } else if (status.is5xxServerError()) {
-                        // Handle server error
                         return true;
                     }
-                    return false;  // No error if not 4xx or 5xx
+                    return false;
                 }, response -> response.bodyToMono(String.class)
                         .flatMap(errorBody -> Mono.error(new RuntimeException("Error occurred: " + response.statusCode() + " - " + errorBody))))
                 .bodyToMono(String.class)
-                .timeout(Duration.ofSeconds(10))  // Adjust timeout as necessary
+                .timeout(Duration.ofSeconds(10))
                 .onErrorResume(e -> {
-                    // Handle all errors that occur during the request
-                    System.out.println("Error: " + e.getMessage()); // Log the error message
+                    System.out.println("Error: " + e.getMessage());
                     return Mono.just("An error occurred: " + e.getMessage());
                 })
-                .block();  // If you need the result synchronously
+                .block();
     }
 
     private List<Question> parseQuestionsFromJson(String responseJson) {
@@ -171,10 +165,8 @@ public class TestService {
     private String extractContentFromAiResponse(String response) throws IOException {
         try {
             JsonNode jsonNode = new ObjectMapper().readTree(response);
-            // Process the JSON response
             return jsonNode.toString();
         } catch (JsonParseException e) {
-            // Log the error and handle it gracefully, such as returning a default error message
             System.out.println("Failed to parse JSON response: " + response);
             throw new RuntimeException("Invalid response format");
         }

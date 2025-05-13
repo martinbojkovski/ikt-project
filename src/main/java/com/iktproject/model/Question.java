@@ -13,5 +13,4 @@ public class Question {
     private String text;
     private List<String> options;
     private String correctAnswer;
-    // Getters, Setters, Constructors
 }
