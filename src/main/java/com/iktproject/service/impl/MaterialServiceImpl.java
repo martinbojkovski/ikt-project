@@ -5,7 +5,12 @@ import com.iktproject.model.Subject;
 import com.iktproject.repository.MaterialRepository;
 import com.iktproject.service.MaterialService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,5 +50,38 @@ public class MaterialServiceImpl implements MaterialService {
     public void delete(Long id) {
         Material material = findById(id);
         materialRepository.delete(material);
+    }
+
+    @Override
+    public List<Material> importFromFile(MultipartFile file, Subject subject) throws IOException {
+        List<Material> importedMaterials = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            StringBuilder contentBuilder = new StringBuilder();
+            String currentTitle = null;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("===") && line.endsWith("===")) {
+                    currentTitle = line.substring(3, line.length() - 3).trim();
+                } else {
+                    if (contentBuilder.length() > 0) {
+                        contentBuilder.append("\n");
+                    }
+                    contentBuilder.append(line);
+                }
+            }
+
+            if (currentTitle != null && contentBuilder.length() > 0) {
+                Material material = new Material(
+                        currentTitle,
+                        contentBuilder.toString(),
+                        subject
+                );
+                importedMaterials.add(save(material));
+            }
+        }
+
+        return importedMaterials;
     }
 }

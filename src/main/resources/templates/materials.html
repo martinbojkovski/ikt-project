@@ -30,6 +30,25 @@
     <a th:href="@{'/subjects/' + ${subject.id} + '/generate-material'}" class="btn btn-primary">Generate Material with AI</a>
 </div>
 
+<!-- Import Section -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Import Materials from File</h5>
+    </div>
+    <div class="card-body">
+        <form th:action="@{'/subjects/' + ${subject.id} + '/materials/import'}"
+              method="post"
+              enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="materialFile" class="form-label">Select .txt file to import</label>
+                <input class="form-control" type="file" id="materialFile" name="file" accept=".txt" required>
+                <div class="form-text">File format: Text file should start with "=== Title ===" followed by content</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Import Materials</button>
+        </form>
+    </div>
+</div>
+
 <!-- Test Section -->
 <div th:if="${questions != null}">
     <h2 class="mb-4">Test</h2>
