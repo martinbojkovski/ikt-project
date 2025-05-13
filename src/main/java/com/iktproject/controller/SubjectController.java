@@ -79,17 +79,45 @@ public class SubjectController {
     }
 
     @PostMapping("/submit-test")
-    public String submitTest(@RequestParam Map<String, String> formData,
-                             Principal principal)
-    {
-        double grade = testService.calculateGrade(formData);
+    public String submitTest(@RequestParam Map<String, String> answers,
+                             @RequestParam Long subjectId,
+                             Principal principal) {
 
-        User user = testService.getLoggedInUser(principal.getName());
-            if (user.getType() == Type.STUDENT) {
-                user.setGrade_average(grade);
-                testService.saveUser(user);
+        // Testing purpose.
+        System.out.println(answers);
+
+        int correctCount = 0;
+        int total = 0;
+
+        for (int i = 0; ; i++) {
+            String answerKey = "answer" + i;
+            String correctKey = "correct" + i;
+
+
+            if (!answers.containsKey(answerKey) || !answers.containsKey(correctKey)) {
+                break;
             }
 
-            return "redirect:/subjects";
+            String selected = answers.get(answerKey);
+            String correct = answers.get(correctKey);
+
+            if (selected.equals(correct)) {
+                correctCount++;
+            }
+
+            total++;
         }
+
+
+        double grade = testService.calculateGrade(correctCount, total);
+
+        User user = testService.getLoggedInUser(principal.getName());
+        if (user.getType() == Type.STUDENT) {
+            user.setTakenTests(user.getTakenTests() + 1);
+            user.setGradeAverage((grade + user.getGradeAverage()) / user.getTakenTests());
+            testService.saveUser(user);
+        }
+
+        return "redirect:/subjects";
+    }
 }

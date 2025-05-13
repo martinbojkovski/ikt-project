@@ -14,6 +14,7 @@ public class Material {
 
     private String title;
 
+    @Lob
     private String content;
 
     @ManyToOne

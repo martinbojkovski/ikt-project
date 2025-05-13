@@ -64,13 +64,8 @@ public class TestService {
     }
 
 
-    public double calculateGrade(Map<String, String> answers) {
-        int correct = 0;
-        int total = answers.size();
-        for (int i = 0; i < total; i++) {
-            String userAnswer = answers.get("answer" + i);
-            if (userAnswer.equalsIgnoreCase("CORRECT_ANSWER")) correct++;
-        }
+    public double calculateGrade(int correct, int total) {
+
         double rawScore = (double) correct / total;
         return Math.round((rawScore * 4 + 1) * 10.0) / 10.0;
     }
@@ -152,25 +147,35 @@ public class TestService {
 
         String responseJson = callOpenAi(request);
 
-        String content = extractContentFromAiResponse(responseJson);
+        Map<String, String> parsedContent = extractContentFromAiResponse(responseJson);
 
         Material material = new Material();
-        material.setTitle(prompt);
-        material.setContent(content);
+        material.setTitle(parsedContent.get("title"));
+        material.setContent(parsedContent.get("body"));
         material.setSubject(subject);
 
         materialRepository.save(material);
     }
 
-    private String extractContentFromAiResponse(String response) throws IOException {
-        try {
-            JsonNode jsonNode = new ObjectMapper().readTree(response);
-            return jsonNode.toString();
-        } catch (JsonParseException e) {
-            System.out.println("Failed to parse JSON response: " + response);
-            throw new RuntimeException("Invalid response format");
+    public Map<String, String> extractContentFromAiResponse(String json) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = objectMapper.readTree(json);
+
+        String fullContent = root.path("choices").get(0).path("message").path("content").asText();
+
+        String[] parts = fullContent.split("(?i)Title:\\s*|(?i)Body:\\s*", 3);
+
+        if (parts.length < 3) {
+            throw new RuntimeException("Could not extract title and body from AI response");
         }
+
+        Map<String, String> result = new HashMap<>();
+        result.put("title", parts[1].trim());
+        result.put("body", parts[2].trim());
+
+        return result;
     }
+
 
 
 
