@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Page - AIClassroom</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+        }
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .logo img {
+            width: 80px;
+            margin-right: 15px;
+        }
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .filters {
+            padding: 20px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
+        .filters label {
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 40px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #c2d1e0;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        .favorite {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: grey;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .favorite.active {
+            color: red;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: grey;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="/images/logo.png"> AIClassroom
+    </div>    <nav style="margin-left: 937px">
+    <a href="home.html">Home</a>
+    <a href="teacherpage.html.html">Add New Lesson</a>
+    <a href="about.html">About</a>
+</nav>
+</header>
+
+<div class="filters">
+    <label><input type="checkbox" id="filterFavorites" onchange="applyFilters()"> Show Favorites Only</label>
+    <label>
+        Difficulty:
+        <select id="filterDifficulty" onchange="applyFilters()">
+            <option value="">All</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Difficult">Difficult</option>
+        </select>
+    </label>
+</div>
+
+<div class="grid" id="lessonGrid"></div>
+
+<div class="modal" id="modal">
+    <div class="modal-content" id="modalContent">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalText"></p>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const lessons = [[${lessonsJson}]];
+    function toggleFavorite(index) {
+        lessons[index].isFavorite = !lessons[index].isFavorite;
+        renderLessons();
+    }
+    function applyFilters() {
+        renderLessons();
+    }
+    function renderLessons() {
+        const container = document.getElementById("lessonGrid");
+        container.innerHTML = "";
+        const showFavorites = document.getElementById("filterFavorites").checked;
+        const difficultyFilter = document.getElementById("filterDifficulty").value;
+        lessons.forEach((lesson, index) => {
+            if (showFavorites && !lesson.isFavorite) return;
+            if (difficultyFilter && lesson.difficulty !== difficultyFilter) return;
+            const card = document.createElement("div");
+            card.className = "card";
+            const fav = document.createElement("div");
+            fav.className = "favorite" + (lesson.isFavorite ? " active" : "");
+            fav.innerHTML = lesson.isFavorite ? "★" : "☆";
+            fav.onclick = () => toggleFavorite(index);
+            card.appendChild(fav);
+            const title = document.createElement("h3");
+            title.innerText = lesson.title;
+            card.appendChild(title);
+            const text = document.createElement("p");
+            text.innerText = lesson.description.substring(0, 100) + "...";
+            card.appendChild(text);
+            const readMore = document.createElement("span");
+            readMore.className = "read-more";
+            readMore.innerText = "Read More";
+            readMore.onclick = () => openModal(lesson.title, lesson.description);
+            card.appendChild(readMore);
+            container.appendChild(card);
+        });
+    }
+    function openModal(title, text) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalText").innerText = text;
+        document.getElementById("modal").style.display = "flex";
+    }
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+    window.onload = renderLessons;
+</script>
+
+</body>
+</html>
