@@ -4,6 +4,10 @@ import com.iktproject.model.*;
 import com.iktproject.service.MaterialService;
 import com.iktproject.service.SubjectService;
 import com.iktproject.service.impl.TestService;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -132,5 +136,19 @@ public class SubjectController {
         }
 
         return "redirect:/subjects";
+    }
+
+    @GetMapping("subjects/{id}/export-pdf")
+    public ResponseEntity<ByteArrayResource> exportToPdf(@PathVariable Long id)
+    {
+        Material material=materialService.findById(id);
+
+        byte[] pdfBytes= materialService.exportToPDF(material.getTitle(),material.getContent());
+
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=material_"+material.getTitle()+".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdfBytes.length)
+                .body(new ByteArrayResource(pdfBytes));
     }
 }

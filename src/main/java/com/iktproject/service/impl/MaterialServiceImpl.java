@@ -4,10 +4,16 @@ import com.iktproject.model.Material;
 import com.iktproject.model.Subject;
 import com.iktproject.repository.MaterialRepository;
 import com.iktproject.service.MaterialService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -16,6 +22,9 @@ import java.util.List;
 @Service
 public class MaterialServiceImpl implements MaterialService {
 
+
+    @Autowired
+    private TemplateEngine templateEngine;
     private final MaterialRepository materialRepository;
 
     public MaterialServiceImpl(MaterialRepository materialRepository) {
@@ -84,4 +93,34 @@ public class MaterialServiceImpl implements MaterialService {
 
         return importedMaterials;
     }
+
+    @Override
+    public byte[] exportToPDF(String title, String content) {
+        try
+        {
+            Context context=new Context();
+            context.setVariable("title",title);
+            context.setVariable("content",content);
+
+
+            String htmlContent = templateEngine.process("pdf/material-pdf", context);
+
+
+
+            ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+            PdfRendererBuilder builder=new PdfRendererBuilder();
+            builder.useFastMode();
+            builder.withHtmlContent(htmlContent,null);
+            builder.toStream(outputStream);
+            builder.run();
+
+            return outputStream.toByteArray();
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Failed to generate PDF", e);
+        }
+
+    }
+
+
 }

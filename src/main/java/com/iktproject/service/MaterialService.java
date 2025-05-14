@@ -14,4 +14,6 @@ public interface MaterialService {
     Material update(Long id, Material material);
     void delete(Long id);
     List<Material> importFromFile(MultipartFile file, Subject subject) throws IOException;
+
+    byte[] exportToPDF(String title,String content);
 }
