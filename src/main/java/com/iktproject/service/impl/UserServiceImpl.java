@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setGrade_average(0.00);
+        user.setGradeAverage(0.00);
+        user.setTakenTests(0);
         return userRepository.save(user);
     }
 
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         userToUpdate.setName(user.getName());
         userToUpdate.setSurname(user.getSurname());
-        userToUpdate.setGrade_average(user.getGrade_average());
+        userToUpdate.setGradeAverage(user.getGradeAverage());
 
         return userRepository.save(userToUpdate);
     }

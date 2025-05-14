@@ -18,18 +18,21 @@ public class User {
 
     private String surname;
 
-    private Double grade_average;
+    private Double gradeAverage;
+
+    private int takenTests;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    public User(String username, String name, String surname, Double grade_average, String password, Type type) {
+    public User(String username, String name, String surname, Double gradeAverage, int takenTests, String password, Type type) {
         this.username = username;
         this.name = name;
         this.surname = surname;
-        this.grade_average = grade_average;
+        this.takenTests = takenTests;
+        this.gradeAverage = gradeAverage;
         this.password = password;
         this.type = type;
     }
