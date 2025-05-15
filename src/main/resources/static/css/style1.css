@@ -1,0 +1,238 @@
+/*   HEADER  */
+
+body{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #DCE6EE;
+    font-family: 'Inria Sans', sans-serif;
+}
+
+header{
+    width: 100%;
+    height: 5em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #80AED4;
+}
+.logo{
+    padding-left: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+header img{
+    height: 5em;
+}
+.logo h2{
+    font-size: 3em;
+    color: white;
+}
+.menu{
+    padding-right: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+}
+
+.menu ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    list-style: none;
+}
+.menu ul li{
+    margin: 1em;
+}
+.menu ul li a{
+    color: white;
+    text-decoration: none;
+    font-size: 1.3em;
+}
+
+ /* INDEX MAIN PART */
+
+main{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 4em;
+}
+main img{
+    height: 12em;
+    width: 12em;
+}
+main h1{
+    color: #2B608C;
+    font-size: 3.2em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}
+main h2{
+    font-size: 1.9em;
+    margin-top: 0;
+    margin-bottom: 0.2em;
+    color: #2B81C8;
+    font-weight: lighter;
+}
+main button{
+    border: 1px solid white;
+    background-color: #2B608C;
+    color: white;
+    width: 12em;
+    height: 4.3em;
+    border-radius: 0.7em;
+    margin-top: 1.5em;
+
+}
+main button a{
+    color: white;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+
+/*  LOGIN PAGE  */
+
+.login-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 15em;
+}
+
+.login-form input{
+    width: 100%;
+    height: 3.2em;
+    border-radius: 0.3em;
+    border: 2px solid #2B608C;
+}
+
+.login-form label{
+    color: #2B608C;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.2em;
+
+}
+
+.login-page-buttons{
+    width: 100%;
+    font-weight: bolder;
+}
+
+#create-button{
+    background-color: white;
+    color: #2B608C;
+    font-weight: bolder;
+    border: 2px solid #2B608C;
+
+}
+
+#login-button{
+    border: 2px solid white;
+}
+
+/*  SIGNUP PAGE  */
+
+.signup-main{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 2em;
+}
+
+.signup-form{
+    display: flex;
+    flex-direction: column;
+    margin-left: 5em;
+    width: 40em;
+    align-items: start;
+}
+
+#first-and-last-name{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+#radio-buttons{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+
+#first-name,
+#last-name,
+#email,
+#password,
+#repeat-password{
+    width: 20em;
+    height: 3.4em;
+    border: 2px solid #2B608C;
+    border-radius: 0.3em;
+
+}
+.signup-form label{
+    margin-top: 1.3em;
+    color: #2B608C;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#first-name{
+    margin-right: 2em;
+}
+
+#radio-buttons div{
+    margin-top: 1.3em;
+    margin-right: 2em;
+}
+
+
+.signup-form button{
+    width: 20em;
+    font-weight: bolder;
+    margin-top: 3em;
+}
+
+#signup-image{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+}
+
+#create-button a{
+    color: #2B608C;
+    text-decoration: none;
+    font-size: 1.3em;
+}
+
+/*  ABOUT  */
+
+#about{
+    align-items: start;
+
+}
+
+#about h1{
+    margin-left: 2em;
+    margin-bottom: 0.7em;
+}
+#about div{
+    width: 50%;
+    color: #2B608C;
+    margin-left: 6em;
+    margin-bottom: 1em;
+}
