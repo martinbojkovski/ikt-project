@@ -1,18 +1,20 @@
 package com.iktproject.controller;
 
-import com.iktproject.model.Question;
-import com.iktproject.model.Subject;
-import com.iktproject.model.Type;
-import com.iktproject.model.User;
+import com.iktproject.model.*;
 import com.iktproject.service.MaterialService;
 import com.iktproject.service.SubjectService;
 import com.iktproject.service.impl.TestService;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -45,6 +47,21 @@ public class SubjectController {
         model.addAttribute("subject", subject);
         model.addAttribute("materials", subject.getMaterials());
         return "materials";
+    }
+
+    @PostMapping("/subjects/{id}/materials/import")
+    public String importMaterials(@PathVariable Long id,
+                                  @RequestParam("file") MultipartFile file)
+            throws IOException {
+        Subject subject = subjectService.findById(id);
+
+        if (subject == null) {
+            throw new RuntimeException("Subject not found");
+        }
+
+        materialService.importFromFile(file, subject);
+
+        return "redirect:/subjects/" + id + "/materials";
     }
 
     @GetMapping("/subjects/{id}/generate-material")
@@ -119,5 +136,19 @@ public class SubjectController {
         }
 
         return "redirect:/subjects";
+    }
+
+    @GetMapping("subjects/{id}/export-pdf")
+    public ResponseEntity<ByteArrayResource> exportToPdf(@PathVariable Long id)
+    {
+        Material material=materialService.findById(id);
+
+        byte[] pdfBytes= materialService.exportToPDF(material.getTitle(),material.getContent());
+
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=material_"+material.getTitle()+".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdfBytes.length)
+                .body(new ByteArrayResource(pdfBytes));
     }
 }

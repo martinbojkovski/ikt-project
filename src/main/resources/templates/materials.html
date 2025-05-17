@@ -18,9 +18,14 @@
             <div class="card-body">
                 <h5 class="card-title" th:text="${material.title}"></h5>
                 <p class="card-text" th:text="${material.content}"></p>
-                <form th:action="@{'/subjects/' + ${material.id} + '/generate-test'}" method="get">
-                    <button type="submit" class="btn btn-success">Generate Test</button>
-                </form>
+                <div class="d-flex align-items-center gap-2">
+
+
+                    <form th:action="@{'/subjects/' + ${material.id} + '/generate-test'}" method="get">
+                        <button type="submit" class="btn btn-success">Generate Test</button>
+                    </form>
+                    <a th:href="@{'/subjects/' + ${material.id} + '/export-pdf'}" class="btn btn-danger">Export To PDF</a>
+                </div>
             </div>
         </div>
     </div>
@@ -28,6 +33,25 @@
 
 <div class="mb-4 d-flex gap-3">
     <a th:href="@{'/subjects/' + ${subject.id} + '/generate-material'}" class="btn btn-primary">Generate Material with AI</a>
+</div>
+
+<!-- Import Section -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Import Materials from File</h5>
+    </div>
+    <div class="card-body">
+        <form th:action="@{'/subjects/' + ${subject.id} + '/materials/import'}"
+              method="post"
+              enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="materialFile" class="form-label">Select .txt file to import</label>
+                <input class="form-control" type="file" id="materialFile" name="file" accept=".txt" required>
+                <div class="form-text">File format: Text file should start with "=== Title ===" followed by content</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Import Materials</button>
+        </form>
+    </div>
 </div>
 
 <!-- Test Section -->
