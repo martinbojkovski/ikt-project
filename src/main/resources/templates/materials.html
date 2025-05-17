@@ -1,80 +1,208 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Materials</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Materials - ' + ${subject.subjectName}">Materials</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+        }
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .logo img {
+            width: 80px;
+            margin-right: 15px;
+        }
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #c2d1e0;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: grey;
+        }
+        .import-section {
+            margin: 30px 0;
+        }
+        .test-section {
+            margin-top: 40px;
+        }
+    </style>
 </head>
-<body class="container mt-5">
+<body>
 
-<h1 class="mb-4" th:text="'Materials for ' + ${subject.subjectName}"></h1>
+<header>
+    <div class="logo">
+        <img src="/images/logo.png" th:src="@{/images/logo.png}"> AIClassroom
+    </div>
+    <nav>
+        <a href="/home">Home</a>
+        <a href="/subjects">Subjects</a>
+        <a href="/about">About</a>
+    </nav>
+</header>
 
-<div class="mb-3">
-    <a href="/subjects" class="btn btn-secondary">← Back to Subjects</a>
-</div>
+<div class="container">
+    <h1 class="mb-4" th:text="'Materials for ' + ${subject.subjectName}"></h1>
 
-<div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
-    <div class="col" th:each="material : ${materials}">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title" th:text="${material.title}"></h5>
-                <p class="card-text" th:text="${material.content}"></p>
-                <div class="d-flex align-items-center gap-2">
+    <div class="mb-4">
+        <a href="/subjects" class="btn btn-secondary">← Back to Subjects</a>
+    </div>
 
-
-                    <form th:action="@{'/subjects/' + ${material.id} + '/generate-test'}" method="get">
-                        <button type="submit" class="btn btn-success">Generate Test</button>
-                    </form>
-                    <a th:href="@{'/subjects/' + ${material.id} + '/export-pdf'}" class="btn btn-danger">Export To PDF</a>
-                </div>
+    <!-- Materials Grid -->
+    <div class="grid">
+        <div th:each="material : ${materials}" class="card">
+            <h3 th:text="${material.title}" class="card-title"></h3>
+            <p class="card-text" th:text="${material.content}"></p>
+            <div class="action-buttons">
+                <form th:action="@{'/subjects/' + ${material.id} + '/generate-test'}" method="get">
+                    <button type="submit" class="btn btn-success">Generate Test</button>
+                </form>
+                <a th:href="@{'/subjects/' + ${material.id} + '/export-pdf'}" class="btn btn-danger">Export To PDF</a>
             </div>
+        </div>
+    </div>
+
+    <!-- Generate Material Button -->
+    <div class="mb-4">
+        <a th:href="@{'/subjects/' + ${subject.id} + '/generate-material'}" class="btn btn-primary">Generate Material with AI</a>
+    </div>
+
+    <!-- Import Section -->
+    <div class="card import-section">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Import Materials from File</h5>
+        </div>
+        <div class="card-body">
+            <form th:action="@{'/subjects/' + ${subject.id} + '/materials/import'}"
+                  method="post"
+                  enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="materialFile" class="form-label">Select .txt file to import</label>
+                    <input class="form-control" type="file" id="materialFile" name="file" accept=".txt" required>
+                    <div class="form-text">File format: Text file should start with "=== Title ===" followed by content</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Import Materials</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Test Section -->
+    <div th:if="${questions != null}" class="test-section card">
+        <div class="card-body">
+            <h2 class="mb-4">Test</h2>
+            <form action="/submit-test" method="post">
+                <input type="hidden" name="subjectId" th:value="${subject.id}"/>
+                <div th:each="question, iterStat : ${questions}" class="mb-4">
+                    <p><strong th:text="'Q' + ${iterStat.index + 1} + ': ' + ${question.text}"></strong></p>
+                    <div th:each="option, optStat : ${question.options}">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   th:name="${'answer' + iterStat.index}"
+                                   th:value="${option}"
+                                   required/>
+                            <label class="form-check-label" th:text="${option}"></label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Test</button>
+            </form>
         </div>
     </div>
 </div>
 
-<div class="mb-4 d-flex gap-3">
-    <a th:href="@{'/subjects/' + ${subject.id} + '/generate-material'}" class="btn btn-primary">Generate Material with AI</a>
-</div>
-
-<!-- Import Section -->
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Import Materials from File</h5>
-    </div>
-    <div class="card-body">
-        <form th:action="@{'/subjects/' + ${subject.id} + '/materials/import'}"
-              method="post"
-              enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="materialFile" class="form-label">Select .txt file to import</label>
-                <input class="form-control" type="file" id="materialFile" name="file" accept=".txt" required>
-                <div class="form-text">File format: Text file should start with "=== Title ===" followed by content</div>
-            </div>
-            <button type="submit" class="btn btn-primary">Import Materials</button>
-        </form>
+<!-- Modal for Material Details -->
+<div class="modal" id="materialModal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalContent"></p>
     </div>
 </div>
 
-<!-- Test Section -->
-<div th:if="${questions != null}">
-    <h2 class="mb-4">Test</h2>
-    <form action="/submit-test" method="post">
-        <input type="hidden" name="subjectId" th:value="${subject.id}"/>
-        <div th:each="question, iterStat : ${questions}" class="mb-4">
-            <p><strong th:text="'Q' + ${iterStat.index + 1} + ': ' + ${question.text}"></strong></p>
-            <div th:each="option, optStat : ${question.options}">
-                <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           th:name="${'answer' + iterStat.index}"
-                           th:value="${option}"
-                           required/>
-                    <label class="form-check-label" th:text="${option}"></label>
-                </div>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Test</button>
-    </form>
-</div>
+<script>
+    function openModal(title, content) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalContent').textContent = content;
+        document.getElementById('materialModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('materialModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside content
+    window.onclick = function(event) {
+        const modal = document.getElementById('materialModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+</script>
 
 </body>
 </html>

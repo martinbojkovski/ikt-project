@@ -101,7 +101,7 @@ public class SubjectController {
                              Principal principal) {
 
         // Testing purpose.
-        System.out.println(answers);
+        //System.out.println(answers);
 
         int correctCount = 0;
         int total = 0;
