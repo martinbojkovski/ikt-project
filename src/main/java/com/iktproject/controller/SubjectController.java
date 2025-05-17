@@ -49,6 +49,16 @@ public class SubjectController {
         return "materials";
     }
 
+    @GetMapping("/subjects/{id}/materials/import")
+    public String showImportPage(@PathVariable Long id, Model model) {
+        Subject subject = subjectService.findById(id);
+        if (subject == null) {
+            throw new RuntimeException("Subject not found");
+        }
+        model.addAttribute("subject", subject);
+        return "import-material";  // your Thymeleaf template name
+    }
+
     @PostMapping("/subjects/{id}/materials/import")
     public String importMaterials(@PathVariable Long id,
                                   @RequestParam("file") MultipartFile file)
@@ -64,7 +74,7 @@ public class SubjectController {
         return "redirect:/subjects/" + id + "/materials";
     }
 
-    @GetMapping("/subjects/{id}/generate-material")
+    @GetMapping("/subjects/{id}/materials/generate")
     public String showGenerateMaterialForm(@PathVariable Long id, Model model) {
         Subject subject = subjectService.findById(id);
         model.addAttribute("subject", subject);

@@ -1,21 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Subjects</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Subjects - AI Classroom</title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style1.css}">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Sans&display=swap" rel="stylesheet">
 </head>
-<body class="container mt-5">
+<body>
 
-<h1 class="mb-4">Subjects</h1>
+<header>
+    <div class="logo">
+        <img th:src="@{/images/logo.png}" alt="Logo">
+        <h2>AI Classroom</h2>
+    </div>
+    <div class="menu">
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/about}">About</a></li>
 
-<div class="list-group">
-    <a th:each="subject : ${subjects}"
-       th:href="@{'/subjects/' + ${subject.id} + '/materials'}"
-       class="list-group-item list-group-item-action">
-        <h5 th:text="${subject.subjectName}"></h5>
-        <p th:text="${subject.subjectDescription}"></p>
-    </a>
-</div>
+            <!-- Show greeting if authenticated -->
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <span style="color:white">Hello, <strong th:text="${#authentication.name}">Username</strong></span>
+            </li>
+
+            <!-- Show Log In link if not authenticated -->
+            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/login}">Log In</a>
+            </li>
+
+            <!-- Optional: Add logout link -->
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/logout}">Log Out</a>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <h1>Subjects</h1>
+    <div class="subjects-list">
+        <div th:each="subject : ${subjects}" class="subject-card">
+            <h3 th:text="${subject.subjectName}"></h3>
+            <p th:text="${subject.subjectDescription}"></p>
+            <button
+                    th:onclick="'window.location.href=\'/subjects/' + ${subject.id} + '/materials\''"
+                    class="explore-btn">
+                Explore
+            </button>
+        </div>
+    </div>
+</main>
 
 </body>
 </html>

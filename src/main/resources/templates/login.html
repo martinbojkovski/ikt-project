@@ -1,23 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>AI Classroom</title>
+    <link rel="stylesheet" th:href="@{/css/style1.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-<h2>Login</h2>
-<form th:action="@{/login}" method="post">
-    <label>Username: <input type="text" name="username" /></label><br>
-    <label>Password: <input type="password" name="password" /></label><br>
-    <button type="submit">Login</button>
-</form>
-<a>
 
-</a>
-<div th:if="${param.error}">
-    Invalid username or password.
-</div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
+<header>
+    <div class="logo">
+        <img th:src="@{/images/logo.png}" alt="Logo">
+        <h2>AI Classroom</h2>
+    </div>
+    <div class="menu">
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+            <li><a th:href="@{/login}">Log In</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <h2>Login</h2>
+    <form th:action="@{/login}" method="post" class="login-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit" id="login-button" class="login-page-buttons">Login!</button>
+        <button type="button" id="create-button" class="login-page-buttons">
+            <a th:href="@{/register}">Create an account</a>
+        </button>
+    </form>
+
+    <div th:if="${param.error}" style="color: red; margin-top: 1em;">
+        Invalid username or password.
+    </div>
+    <div th:if="${param.logout}" style="color: green; margin-top: 1em;">
+        You have been logged out.
+    </div>
+</main>
+
 </body>
 </html>

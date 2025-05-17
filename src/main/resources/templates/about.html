@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -35,12 +36,21 @@
     </div>
 </header>
 
-<main>
-    <img th:src="@{/images/logo.png}" alt="Logo">
-    <h1>Welcome to AI Classroom</h1>
-    <h2>Where education meets innovation.</h2>
-    <a th:href="${#authorization.expression('isAuthenticated()') ? '/subjects' : '/login'}">
-        <button>Start now!</button>
-    </a></main>
+
+<main id="about">
+    <h1>About AI Classroom</h1>
+    <div>
+        Welcome to AI Classroom – an innovative platform designed to empower both teachers and students through the power of artificial intelligence.
+    </div>
+    <div>
+        Our mission is to enhance the learning experience by making content creation faster, smarter, and more accessible. With AI Classroom, teachers can effortlessly generate high-quality lesson content tailored to their subjects and students' needs. Meanwhile, students can create personalized practice tests to help them study more effectively and confidently.
+    </div>
+    <div>
+        Whether you're teaching or learning, AI Classroom provides intelligent tools that save time, encourage creativity, and support educational success.
+    </div>
+
+</main>
+
+
 </body>
 </html>
