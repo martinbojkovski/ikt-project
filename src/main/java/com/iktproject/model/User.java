@@ -24,7 +24,7 @@ public class User {
 
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Type type;
 
     public User(String username, String name, String surname, Double gradeAverage, int takenTests, String password, Type type) {
