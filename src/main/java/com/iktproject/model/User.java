@@ -24,7 +24,8 @@ public class User {
 
     private String password;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "user_type")
     private Type type;
 
     public User(String username, String name, String surname, Double gradeAverage, int takenTests, String password, Type type) {
