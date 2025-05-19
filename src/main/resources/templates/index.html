@@ -37,7 +37,7 @@
 
 <main>
     <img th:src="@{/images/logo.png}" alt="Logo">
-    <h1>Welcome to AI Classroom</h1>
+    <h1>Welcome to SmartClass</h1>
     <h2>Where education meets innovation.</h2>
     <a th:href="${#authorization.expression('isAuthenticated()') ? '/subjects' : '/login'}">
         <button>Start now!</button>
