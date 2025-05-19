@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Subject - AI Classroom</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Sans&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inria Sans', sans-serif;
+            background-color: #f4faff;
+            margin: 0;
+            padding: 0;
+        }
+
+        header{
+            width: 100%;
+            height: 5em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #80AED4;
+        }
+        .logo{
+            padding-left: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        header img{
+            height: 5em;
+        }
+        .logo h2{
+            font-size: 3em;
+            color: white;
+        }
+        .menu{
+            padding-right: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+        }
+        .menu ul{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            width: 100%;
+            list-style: none;
+        }
+        .menu ul li{
+            margin: 1em;
+        }
+        .menu ul li a{
+            color: white;
+            text-decoration: none;
+            font-size: 1.3em;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 3rem auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        main h1 {
+            text-align: center;
+            color: #2B608C;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2B608C;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #2B608C;
+            outline: none;
+        }
+
+        .explore-btn {
+            background-color: #2B608C;
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .explore-btn:hover {
+            background-color: #1e4d72;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .menu ul {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+
+            main {
+                margin: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img th:src="@{/images/logo.png}" alt="Logo">
+        <h2>AI Classroom</h2>
+    </div>
+    <div class="menu">
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <span style="color:white">Hello, <strong th:text="${#authentication.name}">Username</strong></span>
+            </li>
+            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/login}">Log In</a>
+            </li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/logout}">Log Out</a>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <h1>Add New Subject</h1>
+
+    <div class="form-container">
+        <form th:action="@{/subjects/add}" method="post" class="add-subject-form">
+            <div class="form-group">
+                <label for="subjectName">Subject Name:</label>
+                <input type="text" id="subjectName" name="subjectName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="subjectDescription">Subject Description:</label>
+                <textarea id="subjectDescription" rows="4" name="subjectDescription" required></textarea>
+            </div>
+
+            <button type="submit" class="explore-btn">Save Subject</button>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>
