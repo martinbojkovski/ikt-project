@@ -161,4 +161,27 @@ public class SubjectController {
                 .contentLength(pdfBytes.length)
                 .body(new ByteArrayResource(pdfBytes));
     }
+
+    @GetMapping("/subjects/add")
+    public String showAddForm(){
+        return "add-subject-form";
+    }
+
+    @PostMapping("/subjects/add")
+    public String addSubject(@RequestParam String subjectName, @RequestParam String subjectDescription){
+        Subject subject = new Subject();
+        subject.setSubjectName(subjectName);
+        subject.setSubjectDescription(subjectDescription);
+        subjectService.save(subject);
+        return "redirect:/subjects";
+    }
+
+    @PostMapping("/subjects/{id}/delete")
+    public String deleteSubject(@PathVariable Long id){
+        Subject subject = subjectService.findById(id);
+        if(subject != null){
+            subjectService.delete(subject.getId());
+        }
+        return "redirect:/subjects";
+    }
 }

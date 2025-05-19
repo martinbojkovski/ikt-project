@@ -1,21 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Subjects - AI Classroom</title>
+    <title>SmartClass</title>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/style1.css}">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inria+Sans&display=swap" rel="stylesheet">
+    <style>
+        .delete-icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #e74c3c; /* Modern red color */
+            padding: 0.2em;
+            margin-left: 0.8em;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+        }
+
+        .delete-icon-btn:hover {
+            color: #c0392b; /* Darker red on hover */
+            background-color: rgba(231, 76, 60, 0.1); /* Light red background on hover */
+            transform: scale(1.1); /* Slight grow effect */
+        }
+
+        .delete-icon-btn:active {
+            transform: scale(0.95); /* Pressed effect */
+        }
+
+        .delete-icon-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3); /* Focus ring for accessibility */
+        }
+    </style>
 </head>
 <body>
 
 <header>
     <div class="logo">
         <img th:src="@{/images/logo.png}" alt="Logo">
-        <h2>AI Classroom</h2>
+        <h2>SmartClass</h2>
     </div>
     <div class="menu">
         <ul>
@@ -42,6 +76,9 @@
 
 <main>
     <h1>Subjects</h1>
+    <div sec:authorize="hasRole('TEACHER')">
+        <a th:href="@{/subjects/add}" class="add-subject-btn">Add Subject</a>
+    </div>
     <div class="subjects-list">
         <div th:each="subject : ${subjects}" class="subject-card">
             <h3 th:text="${subject.subjectName}"></h3>
@@ -51,6 +88,15 @@
                     class="explore-btn">
                 Explore
             </button>
+            <form th:action="@{'/subjects/' + ${subject.id} + '/delete'}" method="post"
+                  sec:authorize="hasRole('TEACHER')"
+                  style="display:inline;">
+                <button type="submit" class="delete-icon-btn" title="Delete">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86732 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
         </div>
     </div>
 </main>
